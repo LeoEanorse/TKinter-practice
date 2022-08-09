@@ -1,1 +1,157 @@
-first_day
+from tkinter import *
+from tkinter import font
+import tkinter.scrolledtext as st
+import tkinter.messagebox as mb
+from turtle import width
+
+# a subclass of Canvas for dealing with resizing of windows
+
+
+# class ResizingCanvas(Canvas):
+#     def __init__(self, parent, **kwargs):
+#         Canvas.__init__(self, parent, **kwargs)
+#         self.bind("<Configure>", self.on_resize)
+#         self.height = self.winfo_reqheight()
+#         self.width = self.winfo_reqwidth()
+
+#     def on_resize(self, event):
+#         # determine the ratio of old width/height to new width/height
+#         wscale = float(event.width)/self.width
+#         hscale = float(event.height)/self.height
+#         self.width = event.width
+#         self.height = event.height
+#         # resize the canvas
+#         self.config(width=self.width, height=self.height)
+#         # rescale all the objects tagged with the "all" tag
+#         self.scale("all", 0, 0, wscale, hscale)
+
+
+def create_image_canvas(container):
+
+    frame = Frame(container, bg='black')
+    frame.rowconfigure(0, weight=1)
+    frame.columnconfigure(0, weight=1)
+
+    canvas = Canvas(frame, relief=SUNKEN,
+                    highlightthickness=1, bg='red')
+
+    sbarV = Scrollbar(frame, orient=VERTICAL, command=canvas.yview)
+    sbarH = Scrollbar(frame, orient=HORIZONTAL, command=canvas.xview)
+    sbarV.grid(column=1, row=0, sticky=NS, rowspan=2)
+    sbarH.grid(column=0, row=1, sticky=EW)
+    canvas.config(yscrollcommand=sbarV.set)
+    canvas.config(xscrollcommand=sbarH.set)
+    canvas.grid(row=0, column=0, sticky=NS+EW)
+
+    return frame
+
+
+def save_value(value):
+    global val
+    val = value
+
+
+def save_variable(variable):
+    global var
+    var = variable
+
+
+def agreement_changed():
+    mb.showinfo(title='Result', message=agreement.get())
+
+
+def create_button_frame(container):
+
+    frame = Frame(container, bg='blue')
+    frame.columnconfigure(0, weight=1)
+    frame.rowconfigure(0, weight=1)
+    frame.rowconfigure(2, weight=1)
+    frame.rowconfigure(4, weight=1)
+    frame.rowconfigure(6, weight=1)
+    frame.rowconfigure(8, weight=1)
+    frame.rowconfigure(10, weight=1)
+    frame.rowconfigure(12, weight=1)
+    frame.rowconfigure(14, weight=1)
+
+    Button(frame, text="Gray Scale").grid(
+        column=0, row=0, sticky=NS+EW, columnspan=2)
+    Scale(frame, orient="horizontal", showvalue=True, from_=0, to=100,
+          command=save_value).grid(column=0, row=1, sticky=NS+EW, columnspan=2)
+    Button(frame, text="Enhanced").grid(
+        column=0, row=2, sticky=NS+EW, columnspan=2)
+    agreement = StringVar()
+    Checkbutton(frame, text='I agree', command=agreement_changed, variable=agreement,
+                onvalue='agree', offvalue='disagree').grid(column=0, row=3, sticky=NS+EW, columnspan=2)
+    Button(frame, text="Gray Scale").grid(
+        column=0, row=4, sticky=NS+EW, columnspan=2)
+    Radiobutton(frame, text="Radio 1", command=save_variable(1),
+                value=1).grid(column=0, row=5, sticky=NS+EW)
+    Radiobutton(frame, text="Radio 2", command=save_variable(2),
+                value=2).grid(column=1, row=5, sticky=NS+EW)
+    Button(frame, text="Gray Scale").grid(
+        column=0, row=6, sticky=NS+EW, columnspan=2)
+    Scale(frame, orient="horizontal", showvalue=True, from_=0, to=100,
+          command=save_value).grid(column=0, row=7, sticky=NS+EW, columnspan=2)
+    Button(frame, text="Gray Scale").grid(
+        column=0, row=8, sticky=NS+EW, columnspan=2)
+    Scale(frame, orient="horizontal", showvalue=True, from_=0, to=100,
+          command=save_value).grid(column=0, row=9, sticky=NS+EW, columnspan=2)
+    Button(frame, text="Gray Scale").grid(
+        column=0, row=10, sticky=NS+EW, columnspan=2)
+    Scale(frame, orient="horizontal", showvalue=True, from_=0, to=100,
+          command=save_value).grid(column=0, row=11, sticky=NS+EW, columnspan=2)
+    Button(frame, text="Gray Scale").grid(
+        column=0, row=12, sticky=NS+EW, columnspan=2)
+    Scale(frame, orient="horizontal", showvalue=True, from_=0, to=100,
+          command=save_value).grid(column=0, row=13, sticky=NS+EW, columnspan=2)
+    Button(frame, text="Gray Scale").grid(
+        column=0, row=14, sticky=NS+EW, columnspan=2)
+    Scale(frame, orient="horizontal", showvalue=True, from_=0, to=100,
+          command=save_value).grid(column=0, row=15, sticky=NS+EW, columnspan=2)
+
+    # canvasframe = Frame(frame, bg='yellow')
+    # # Canvas(canvasframe, relief=SUNKEN, bg='black').grid(sticky=NS+EW)
+    # canvasframe.grid(row=1, column=0, sticky=NS+EW)
+
+    # textlogframe = Frame(frame, bg='blue')
+    # # st.ScrolledText(textlogframe, font=(
+    # #     "Times New Roman", 10)).grid(sticky=NS+EW)
+    # textlogframe.grid(row=2, column=0, sticky=NS+EW)
+
+    return frame
+
+
+def create_main_window():
+
+    # root window
+    root = Tk()
+    root.title('Image for Cartoon')
+    root.minsize(width=800, height=615)
+    root.geometry('800x615')
+
+    menubar = Menu(root)
+
+    filemenu = Menu(menubar)
+    filemenu.add_command(label="Image Open")
+    filemenu.add_command(label="Image Erase")
+    filemenu.add_command(label="Exit", command=root.quit)
+
+    menubar.add_cascade(label="File", menu=filemenu)
+
+    root.columnconfigure(0, weight=3)
+    root.columnconfigure(1, weight=1)
+    root.rowconfigure(0, weight=1)
+
+    input_frame = create_image_canvas(root)
+    input_frame.grid(column=0, row=0, sticky='news')
+
+    button_frame = create_button_frame(root)
+    button_frame.grid(column=1, row=0, sticky='news')
+
+    # layout on the root window
+    root.config(menu=menubar)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    create_main_window()
